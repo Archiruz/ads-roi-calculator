@@ -1,0 +1,1559 @@
+# Pressure Full Stack Developer Technical Test — AI Coding Agent Implementation Plan
+
+## 0. Purpose
+
+Build and deploy the ROI Advertising Calculator required by the **Pressure Technical Test — Full Stack Developer**.
+
+The implementation should be production-minded but intentionally simple. Prioritize:
+
+1. Correct business logic.
+2. Secure authentication and user-data isolation.
+3. Real-time calculator UX.
+4. Clean API and database structure.
+5. Automated tests for the important flows.
+6. Reproducible deployment with Docker Compose.
+7. Public access through a Cloudflare Tunnel.
+8. Clear documentation and presentation material.
+
+Do **not** add unnecessary architecture or dependencies unless they solve a concrete requirement.
+
+---
+
+# 1. Source Requirements
+
+Use the uploaded technical-test PDF as the primary source of requirements.
+
+Key requirements from the PDF:
+
+- Build a web ROI advertising calculator with authentication and private per-user calculation data. (PDF p. 2)
+- Login and Register UI are required.
+- Passwords must be hashed; never store plaintext passwords. (PDF p. 3)
+- Authentication may use JWT or session-based authentication and must survive page refresh. (PDF p. 3)
+- Calculator and History are protected routes. (PDF p. 4)
+- ROI, Margin, and Revenue must update in real time.
+- Slider and numeric inputs must remain synchronized. (PDF p. 4)
+- The Login, Dashboard, and Calculator UI may be customized creatively. (PDF p. 4)
+- Saving a calculation must associate it with the currently authenticated user.
+- History must only show the authenticated user's calculations.
+- Required API endpoints include:
+  - `POST /auth/register`
+  - `POST /auth/login`
+  - `POST /calculations`
+  - `GET /calculations`
+- Relational databases such as MySQL/PostgreSQL are preferred.
+- AI assistance is explicitly allowed as a copilot when the reasoning behind its use can be explained.
+- The ROI/Margin formulas are intentionally omitted from the test; independently research and document the selected business logic.
+- Final deliverables are:
+  - Source repository
+  - Live deployed application
+  - Presentation deck in PDF
+
+UI reference:
+- `https://drive.google.com/drive/folders/1XHjTCCcRlLD1aHhHzSlwdsMF2E0qJhnl?usp=sharing`
+
+Do not silently invent missing UI fields or formulas. Inspect the UI reference and document assumptions before implementing the calculator.
+
+---
+
+# 2. Recommended Technical Stack
+
+## Frontend
+
+- React
+- Vite
+- TypeScript
+- Tailwind CSS
+- React Router
+
+## Backend
+
+- Laravel 12
+- PHP 8.3+
+- Laravel Sanctum for session/cookie authentication
+- Form Requests for validation
+- Feature tests with PHPUnit/Pest
+- Eloquent ORM
+
+## Database
+
+- PostgreSQL
+
+## Deployment
+
+- Docker Compose
+- Nginx
+- PHP-FPM
+- Cloudflare Tunnel (`cloudflared`)
+- No public application/database ports required in production
+
+## Why this stack
+
+Use a Laravel + React application because it is directly aligned with the allowed stack in the assignment and keeps the system small enough to finish reliably.
+
+Use session-based authentication rather than JWT unless implementation constraints force otherwise. The assignment only requires authenticated browser sessions that persist through refreshes.
+
+Use PostgreSQL because the test explicitly prefers relational storage for the User → Calculation relationship.
+
+---
+
+# 3. Target Architecture
+
+```text
+                         Internet
+                            |
+                            v
+                  +---------------------+
+                  |   Cloudflare Edge   |
+                  +----------+----------+
+                             |
+                       Cloudflare Tunnel
+                             |
+                             v
+                  +---------------------+
+                  |     cloudflared     |
+                  +----------+----------+
+                             |
+                       Docker network
+                             |
+                             v
+                  +---------------------+
+                  |        nginx        |
+                  |   public HTTP :80   |
+                  +----------+----------+
+                             |
+                             v
+                  +---------------------+
+                  |      Laravel        |
+                  |     PHP-FPM         |
+                  |                     |
+                  |  Auth               |
+                  |  API                |
+                  |  Calculator logic   |
+                  |  React/Vite assets  |
+                  +----------+----------+
+                             |
+                             v
+                  +---------------------+
+                  |     PostgreSQL      |
+                  +---------------------+
+```
+
+The application should be a single Laravel deployment containing the React frontend generated by Vite. This avoids unnecessary cross-origin complexity.
+
+Production traffic path:
+
+```text
+Browser
+  -> Cloudflare
+  -> Cloudflare Tunnel
+  -> nginx container
+  -> Laravel
+  -> PostgreSQL
+```
+
+The application should not require a publicly exposed server port in production. The `cloudflared` container is the public entry point.
+
+---
+
+# 4. Repository Structure
+
+Use a clean Laravel repository with the frontend inside Laravel:
+
+```text
+/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   └── CalculationController.php
+│   │   └── Requests/
+│   │       ├── Auth/
+│   │       └── StoreCalculationRequest.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   └── Calculation.php
+│   └── Services/
+│       └── CalculationService.php
+│
+├── database/
+│   ├── factories/
+│   ├── migrations/
+│   └── seeders/
+│
+├── resources/
+│   ├── js/
+│   │   ├── components/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── lib/
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── css/
+│
+├── routes/
+│   ├── api.php
+│   └── web.php
+│
+├── tests/
+│   ├── Feature/
+│   │   ├── Auth/
+│   │   └── Calculations/
+│   └── Unit/
+│
+├── docker/
+│   ├── nginx/
+│   │   └── default.conf
+│   └── php/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── docker-compose.prod.yml
+├── .env.example
+├── README.md
+└── BUSINESS_LOGIC.md
+```
+
+Keep naming conventional and avoid unnecessary abstractions.
+
+---
+
+# 5. Initial Discovery Tasks
+
+Before writing application code, the coding agent must:
+
+1. Inspect the provided UI reference.
+2. Identify every calculator input and output visible in the reference.
+3. Record those fields in `BUSINESS_LOGIC.md`.
+4. Research standard definitions for ROI, Margin, and Revenue.
+5. Distinguish ROI from ROAS.
+6. Choose formulas that match the UI inputs and document the choice.
+7. Define edge-case behavior.
+8. Create the DB schema and API contract before implementing controllers/components.
+
+Do not begin by guessing the formulas.
+
+---
+
+# 6. Business Logic
+
+Create:
+
+```text
+BUSINESS_LOGIC.md
+```
+
+Required contents:
+
+## 6.1 Inputs
+
+Document every input from the UI reference.
+
+For each input record:
+
+- Name
+- Type
+- Unit
+- Minimum
+- Maximum
+- Default value
+- Whether it is required
+- Validation rule
+
+## 6.2 Outputs
+
+Document:
+
+- Revenue
+- Margin
+- ROI
+- Any additional output displayed by the UI
+
+## 6.3 Formula Definitions
+
+The test explicitly requires independent research because formulas are not supplied.
+
+For each formula document:
+
+```text
+Formula:
+Reason for selecting it:
+Source/reference:
+Example calculation:
+Edge cases:
+```
+
+Do not claim that the formula came from the test PDF.
+
+## 6.4 Numeric Rules
+
+Define:
+
+- Decimal precision.
+- Currency formatting.
+- Percentage formatting.
+- Rounding behavior.
+- Zero-denominator handling.
+- Negative-value handling.
+- Empty-value handling.
+- Very large-value handling.
+
+The same business logic must be used consistently in:
+
+- Frontend preview calculation.
+- Backend validation/calculation.
+- Tests.
+
+---
+
+# 7. Authentication Implementation
+
+Use Laravel Sanctum with session/cookie authentication.
+
+Required flow:
+
+```text
+Register
+   ↓
+Create hashed user
+   ↓
+Authenticate session
+   ↓
+Dashboard
+```
+
+Login:
+
+```text
+Login form
+   ↓
+Laravel validates credentials
+   ↓
+Authenticated session
+   ↓
+Dashboard
+```
+
+Refresh:
+
+```text
+Browser refresh
+   ↓
+GET /auth/me
+   ↓
+Current authenticated user
+   ↓
+Stay logged in
+```
+
+Logout:
+
+```text
+POST /auth/logout
+   ↓
+Invalidate session
+   ↓
+Redirect to login
+```
+
+Requirements:
+
+- Passwords must be hashed.
+- Never log passwords.
+- Never return password hashes in API responses.
+- Use CSRF protection where appropriate.
+- Regenerate the session after login.
+- Invalidate session on logout.
+
+---
+
+# 8. Authentication API
+
+Implement at minimum:
+
+```http
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+GET  /api/auth/me
+```
+
+Example register request:
+
+```json
+{
+  "name": "Example User",
+  "email": "user@example.com",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+```
+
+Expected behavior:
+
+- `201` for successful registration.
+- `422` for validation errors.
+- `422` for duplicate email.
+- Never return plaintext password.
+- Return the authenticated user or a safe user DTO.
+
+Login:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+Expected behavior:
+
+- `200` for successful login.
+- `422` or `401` for invalid credentials.
+- Create authenticated session.
+
+---
+
+# 9. Calculation Database Design
+
+Create a `calculations` table.
+
+Minimum structure:
+
+```text
+calculations
+------------
+id
+user_id
+[input fields...]
+[calculated fields...]
+created_at
+updated_at
+```
+
+Relationship:
+
+```text
+User
+  hasMany
+Calculation
+
+Calculation
+  belongsTo
+User
+```
+
+Every calculation must store:
+
+- `user_id`
+- The original input values needed to reproduce the calculation.
+- Calculated results that are displayed/saved by the application.
+- Timestamps.
+
+Do not depend on the frontend to provide `user_id`.
+
+The backend must always derive the user from the authenticated session.
+
+---
+
+# 10. Calculation API
+
+Implement:
+
+```http
+POST /api/calculations
+GET  /api/calculations
+```
+
+Both routes are protected.
+
+## POST /calculations
+
+Flow:
+
+```text
+Authenticated user
+        ↓
+Validate request
+        ↓
+CalculationService
+        ↓
+Persist calculation with authenticated user_id
+        ↓
+Return calculation
+```
+
+The request must never accept `user_id` as a trusted field.
+
+If a malicious client sends:
+
+```json
+{
+  "user_id": 999
+}
+```
+
+the backend must ignore/reject that field and continue using the authenticated user's ID.
+
+## GET /calculations
+
+Return only records belonging to the authenticated user.
+
+Preferred query:
+
+```php
+auth()->user()->calculations()
+    ->latest()
+    ->get();
+```
+
+Do not trust a `user_id` query parameter for authorization.
+
+---
+
+# 11. Data Isolation / Authorization
+
+This is a mandatory security requirement.
+
+Scenario:
+
+```text
+User A
+  creates A1
+
+User B
+  creates B1
+```
+
+Expected:
+
+```text
+GET /calculations as User A
+=> [A1]
+
+GET /calculations as User B
+=> [B1]
+```
+
+Never:
+
+```text
+User A => B1
+User B => A1
+```
+
+Add automated tests specifically for this.
+
+This must be enforced server-side even if the frontend already hides another user's records.
+
+---
+
+# 12. Frontend Routes
+
+Suggested routes:
+
+```text
+/login
+/register
+/dashboard
+```
+
+Optional:
+
+```text
+/history
+```
+
+Protected UI routes:
+
+```text
+/dashboard
+/history
+```
+
+Unauthenticated users must be redirected to:
+
+```text
+/login
+```
+
+Authenticated users should not be forced through the login form again after a normal page refresh.
+
+Use an `AuthProvider` or equivalent central auth state.
+
+---
+
+# 13. React Components
+
+Suggested components:
+
+```text
+components/
+├── auth/
+│   ├── LoginForm.tsx
+│   └── RegisterForm.tsx
+│
+├── calculator/
+│   ├── CalculatorForm.tsx
+│   ├── CalculatorInput.tsx
+│   ├── CalculatorSlider.tsx
+│   ├── ResultCard.tsx
+│   └── SaveCalculationButton.tsx
+│
+├── history/
+│   ├── HistoryList.tsx
+│   ├── HistoryItem.tsx
+│   └── EmptyHistory.tsx
+│
+└── ui/
+    ├── Button.tsx
+    ├── Input.tsx
+    ├── Modal.tsx
+    ├── Toast.tsx
+    └── Loading.tsx
+```
+
+Avoid premature component abstraction. Extract components when they have a clear reuse or readability benefit.
+
+---
+
+# 14. Calculator State
+
+Use one source of truth per numeric input.
+
+For a value such as:
+
+```ts
+const [adSpend, setAdSpend] = useState<number>(defaultValue);
+```
+
+Both controls should bind to the same state:
+
+```text
+         shared state
+          /       \
+         /         \
+     Slider       Number
+```
+
+Do not maintain separate slider and number-input states that can drift apart.
+
+When the slider changes:
+
+```text
+Slider
+  ↓
+state
+  ↓
+Number input updates
+```
+
+When the number changes:
+
+```text
+Number
+  ↓
+state
+  ↓
+Slider updates
+```
+
+---
+
+# 15. Real-Time Calculator
+
+The calculator must update outputs immediately without requiring a save action.
+
+Flow:
+
+```text
+Input change
+    ↓
+React state update
+    ↓
+pure calculation function
+    ↓
+Revenue / Margin / ROI
+    ↓
+UI update
+```
+
+Do not make an HTTP request on every slider movement.
+
+Saving is the point where an API call is required.
+
+---
+
+# 16. Calculation Service
+
+Create a single backend service:
+
+```php
+app/Services/CalculationService.php
+```
+
+Responsibilities:
+
+- Normalize numeric values.
+- Validate business constraints not covered by request validation.
+- Calculate outputs.
+- Return a consistent result structure.
+
+Example interface:
+
+```php
+public function calculate(array $inputs): array
+```
+
+The controller should orchestrate the HTTP request and delegate business logic to the service.
+
+Do not put large formula blocks directly inside the controller.
+
+---
+
+# 17. Frontend Calculation Utility
+
+Create a matching pure frontend function:
+
+```text
+resources/js/lib/calculation.ts
+```
+
+Example:
+
+```ts
+export function calculateResults(input: CalculatorInput): CalculatorResult
+```
+
+This function must:
+
+- Be deterministic.
+- Have no API calls.
+- Have no database dependency.
+- Handle edge cases explicitly.
+- Be unit tested.
+
+Backend and frontend calculations must match.
+
+If the backend is treated as the final authority, document any intentional difference.
+
+---
+
+# 18. Validation
+
+Validation must exist at both frontend and backend levels.
+
+Frontend:
+
+- Required values.
+- Numeric values.
+- Min/max range.
+- User-friendly validation messages.
+
+Backend:
+
+- Required fields.
+- Correct types.
+- Allowed ranges.
+- Numeric safety.
+- Business constraints.
+- Authentication.
+
+Never rely solely on frontend validation.
+
+Expected API status codes:
+
+```text
+401 Unauthorized
+422 Validation Error
+404 Not Found
+500 Unexpected Server Error
+```
+
+Return consistent JSON error structures.
+
+---
+
+# 19. UI / UX Requirements
+
+Use the provided UI as the baseline, then improve clarity without changing required behavior.
+
+Priorities:
+
+1. Clear hierarchy.
+2. Calculator inputs are obvious.
+3. Results are immediately visible.
+4. Save action has clear feedback.
+5. History is easy to scan.
+6. Authentication errors are understandable.
+7. Mobile layout works properly.
+8. Loading and error states are visible.
+
+Recommended UI states:
+
+```text
+Loading
+Success
+Validation error
+API error
+Empty history
+Saving
+Saved
+Unauthenticated
+```
+
+Do not overuse animations.
+
+---
+
+# 20. History UI
+
+History should show saved calculations owned by the current user.
+
+Suggested presentation:
+
+```text
+Date
+Revenue
+Margin
+ROI
+```
+
+Optional detail view may show the original input values.
+
+Support a clean empty state:
+
+```text
+No calculations yet.
+Run your first calculation and save it to see it here.
+```
+
+Do not add complex analytics unless all required functionality is already complete.
+
+---
+
+# 21. Automated Tests
+
+Minimum backend feature tests:
+
+## Authentication
+
+- register succeeds.
+- duplicate email is rejected.
+- password is hashed.
+- login succeeds with valid credentials.
+- login fails with invalid credentials.
+- authenticated session survives the intended request lifecycle.
+- logout ends authentication.
+
+## Authorization
+
+- unauthenticated user cannot create calculation.
+- unauthenticated user cannot list calculations.
+- user only receives their own calculations.
+- user cannot use another user's ID to access/associate data.
+
+## Calculations
+
+- valid calculation can be saved.
+- invalid calculator input is rejected.
+- zero-denominator cases are handled.
+- expected calculation outputs are correct.
+
+Minimum frontend/unit tests:
+
+- slider and numeric input remain synchronized.
+- calculator function returns expected results.
+- edge cases do not produce `NaN` or `Infinity`.
+- protected route redirects unauthenticated users.
+
+---
+
+# 22. Docker Strategy
+
+Use Docker Compose for the entire production runtime.
+
+Recommended services:
+
+```text
+app
+web
+db
+cloudflared
+```
+
+## app
+
+Laravel PHP-FPM application.
+
+Responsibilities:
+
+- Laravel runtime.
+- API.
+- Authentication.
+- Serve PHP requests to nginx.
+- Built frontend assets.
+
+## web
+
+Nginx.
+
+Responsibilities:
+
+- Serve `/public` assets.
+- Forward PHP requests to `app:9000`.
+
+Do not expose nginx directly to the public internet in production.
+
+## db
+
+PostgreSQL.
+
+Responsibilities:
+
+- Persistent relational data.
+
+Use a named Docker volume:
+
+```text
+postgres_data
+```
+
+Do not publish PostgreSQL to the public network.
+
+## cloudflared
+
+Cloudflare Tunnel client.
+
+Responsibilities:
+
+- Establish outbound tunnel connection.
+- Route public hostname traffic to nginx.
+
+---
+
+# 23. Docker Compose Production Requirements
+
+Production Compose should:
+
+- Use restart policies.
+- Use a persistent PostgreSQL volume.
+- Use environment variables/secrets rather than hardcoded credentials.
+- Use an internal Docker network.
+- Avoid exposing PostgreSQL.
+- Avoid exposing the web container publicly unless there is a deliberate local-admin/debug need.
+- Include service health checks where practical.
+- Start cloudflared after its dependencies are available.
+- Run Laravel migrations explicitly during deployment.
+- Never run `php artisan migrate:fresh` against production.
+
+Suggested network:
+
+```yaml
+networks:
+  app:
+    driver: bridge
+```
+
+Suggested volume:
+
+```yaml
+volumes:
+  postgres_data:
+```
+
+---
+
+# 24. Cloudflare Tunnel
+
+Use a named Cloudflare Tunnel.
+
+Target architecture:
+
+```text
+https://your-domain.example.com
+        |
+        v
+Cloudflare
+        |
+        v
+Cloudflare Tunnel
+        |
+        v
+cloudflared container
+        |
+        v
+http://web:80
+```
+
+Recommended production approach:
+
+- Create the tunnel in Cloudflare.
+- Create the public hostname in Cloudflare.
+- Point the hostname to the Docker service:
+  - `http://web:80`
+- Store the tunnel token in an environment variable:
+  - `CLOUDFLARE_TUNNEL_TOKEN`
+- Start with:
+
+```bash
+cloudflared tunnel run --token "$CLOUDFLARE_TUNNEL_TOKEN"
+```
+
+The application container should not need to know Cloudflare credentials.
+
+---
+
+# 25. Cloudflare / Cookie Considerations
+
+Because browser authentication uses cookies:
+
+- Configure the application URL correctly.
+- Configure Laravel `APP_URL`.
+- Use HTTPS in production.
+- Configure cookie/session settings for the deployed hostname.
+- Keep the application's public hostname consistent.
+- Verify login, refresh, logout, and API authentication through the Cloudflare hostname, not only through localhost.
+
+Example environment values:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://roi.example.com
+
+SESSION_SECURE_COOKIE=true
+```
+
+Use actual deployment values rather than these examples.
+
+---
+
+# 26. Production Environment Variables
+
+Create:
+
+```text
+.env.example
+```
+
+Document values such as:
+
+```env
+APP_NAME=
+APP_ENV=
+APP_KEY=
+APP_DEBUG=
+APP_URL=
+
+DB_CONNECTION=pgsql
+DB_HOST=db
+DB_PORT=5432
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+
+SESSION_DRIVER=database
+SESSION_DOMAIN=
+SESSION_SECURE_COOKIE=true
+
+CLOUDFLARE_TUNNEL_TOKEN=
+```
+
+Do not commit:
+
+```text
+.env
+```
+
+Do not commit:
+
+- tunnel token
+- database password
+- application key
+- production credentials
+
+---
+
+# 27. Deployment Procedure
+
+The deployment plan must be reproducible.
+
+Recommended sequence:
+
+```text
+1. Provision host
+2. Install Docker + Docker Compose
+3. Clone repository
+4. Create production .env
+5. Build images
+6. Start PostgreSQL
+7. Start Laravel
+8. Run migrations
+9. Build/verify frontend assets
+10. Start nginx
+11. Start cloudflared
+12. Configure Cloudflare DNS/hostname
+13. Verify HTTPS
+14. Verify authentication
+15. Verify calculations
+16. Verify history isolation
+```
+
+Example operational commands:
+
+```bash
+docker compose -f docker-compose.prod.yml build
+docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
+docker compose -f docker-compose.prod.yml exec app php artisan optimize
+```
+
+Use commands appropriate to the final image structure.
+
+---
+
+# 28. Health / Smoke Checks
+
+After deployment verify:
+
+```text
+GET public homepage -> 200
+GET login page -> 200
+register -> success
+login -> success
+refresh -> still authenticated
+calculator -> works
+slider -> syncs
+save calculation -> success
+history -> shows saved record
+second user -> does not see first user's history
+logout -> session invalidated
+```
+
+Also inspect logs:
+
+```bash
+docker compose logs --tail=200 app
+docker compose logs --tail=200 web
+docker compose logs --tail=200 cloudflared
+docker compose logs --tail=200 db
+```
+
+---
+
+# 29. Security Checklist
+
+Before submission:
+
+- [ ] Passwords hashed.
+- [ ] No plaintext passwords in database/logs.
+- [ ] Auth-protected API routes.
+- [ ] Auth-protected frontend routes.
+- [ ] User ID always derived from authenticated session.
+- [ ] No insecure `?user_id=` authorization pattern.
+- [ ] Validation on server.
+- [ ] CSRF/session configuration checked.
+- [ ] Production `APP_DEBUG=false`.
+- [ ] Secrets excluded from Git.
+- [ ] PostgreSQL not publicly exposed.
+- [ ] Application served through HTTPS.
+- [ ] Cloudflare Tunnel token stored securely.
+- [ ] No sensitive information returned in API payloads.
+- [ ] Dependency versions are locked/reproducible.
+
+---
+
+# 30. Git Strategy
+
+Use small, descriptive commits.
+
+Suggested sequence:
+
+```text
+chore: initialize Laravel React application
+feat: add authentication
+feat: add calculation database model
+feat: implement calculation business logic
+feat: add calculator dashboard
+feat: add save calculation API
+feat: add calculation history
+test: add authentication and authorization coverage
+test: add calculation business logic coverage
+chore: add production docker configuration
+chore: add cloudflare tunnel configuration
+docs: add business logic documentation
+docs: add setup and deployment documentation
+```
+
+Do not squash everything into one opaque commit unless project instructions require it.
+
+---
+
+# 31. README Requirements
+
+The final `README.md` must contain:
+
+## Overview
+
+What the application does.
+
+## Tech Stack
+
+React, Laravel, PostgreSQL, Docker Compose, Cloudflare Tunnel.
+
+## Features
+
+- Register/Login
+- Protected dashboard
+- Real-time calculator
+- Save Calculation
+- User-scoped History
+- Logout
+
+## Architecture
+
+Add an ASCII or Mermaid architecture diagram.
+
+## Business Logic
+
+Link to:
+
+```text
+BUSINESS_LOGIC.md
+```
+
+## Local Development
+
+Explain:
+
+```bash
+cp .env.example .env
+docker compose up -d
+docker compose exec app php artisan migrate
+```
+
+Then document the local URL.
+
+## Production Deployment
+
+Document:
+
+- Docker Compose deployment.
+- Environment variables.
+- Cloudflare Tunnel.
+- Database migration.
+- Health checks.
+
+## Testing
+
+Include commands to run the backend/frontend tests.
+
+## AI Usage
+
+Explain where AI was used as a copilot and which decisions were manually reviewed.
+
+---
+
+# 32. Presentation Deck Requirements
+
+Create a PDF presentation with approximately 7–9 slides.
+
+Recommended structure:
+
+1. **Title**
+   - Pressure Technical Test
+   - ROI Advertising Calculator
+   - Developer name
+
+2. **Problem & Requirements**
+   - Authentication
+   - Real-time calculator
+   - Private history
+
+3. **Tech Stack**
+   - React
+   - Laravel
+   - PostgreSQL
+   - Docker
+   - Cloudflare Tunnel
+
+4. **System Architecture**
+   - Browser
+   - Cloudflare
+   - Tunnel
+   - nginx
+   - Laravel
+   - PostgreSQL
+
+5. **Authentication & Security**
+   - Session auth
+   - Password hashing
+   - Protected routes
+   - User-scoped data
+
+6. **Business Logic**
+   - Inputs
+   - Formula definitions
+   - ROI
+   - Margin
+   - Revenue
+   - Edge cases
+
+7. **User Flow**
+   - Register
+   - Login
+   - Calculate
+   - Save
+   - History
+   - Logout
+
+8. **Testing**
+   - Authentication tests
+   - Data isolation test
+   - Calculator tests
+
+9. **Live Demo / Repository**
+   - Live URL
+   - Repository URL
+
+The presentation should explain reasoning, not just show screenshots.
+
+---
+
+# 33. AI Coding Agent Working Rules
+
+The coding agent must follow these rules.
+
+## Rule 1 — Do not guess missing requirements
+
+When the PDF or UI reference does not define something:
+
+- identify the gap,
+- make the smallest reasonable assumption,
+- document the assumption,
+- keep it easy to change.
+
+## Rule 2 — Business logic must be explicit
+
+Do not scatter formulas across React components/controllers.
+
+Use:
+
+```text
+frontend calculation utility
+backend CalculationService
+BUSINESS_LOGIC.md
+automated tests
+```
+
+All four must agree.
+
+## Rule 3 — Backend is authoritative for persistence
+
+Frontend can preview calculations in real time.
+
+Backend validates and persists the authoritative calculation.
+
+## Rule 4 — Authentication is server-enforced
+
+Frontend route guards are UX.
+
+Backend middleware/authentication is security.
+
+## Rule 5 — User isolation must be tested
+
+Do not consider this requirement complete until an automated test proves:
+
+```text
+User A cannot see User B's history.
+```
+
+## Rule 6 — Keep dependencies minimal
+
+Do not introduce:
+
+- Redux unless truly required.
+- Microservices.
+- Redis.
+- Queues.
+- Elasticsearch.
+- GraphQL.
+- Kubernetes.
+- Complex event-driven architecture.
+
+The assignment does not require them.
+
+## Rule 7 — Finish required features before polishing
+
+Priority:
+
+```text
+1. Authentication
+2. Database
+3. Calculator
+4. Save
+5. History
+6. Security
+7. Tests
+8. Deployment
+9. UI polish
+10. Optional enhancements
+```
+
+---
+
+# 34. Definition of Done
+
+The implementation is complete only when all of these are true:
+
+## Functional
+
+- [ ] Register works.
+- [ ] Login works.
+- [ ] User remains authenticated after refresh.
+- [ ] Logout works.
+- [ ] Calculator is accessible only after login.
+- [ ] Calculator updates in real time.
+- [ ] Slider and numeric inputs stay synchronized.
+- [ ] ROI/Margin/Revenue match documented formulas.
+- [ ] Save Calculation works.
+- [ ] History works.
+- [ ] User A cannot see User B's history.
+
+## Technical
+
+- [ ] Laravel API is protected.
+- [ ] Passwords are hashed.
+- [ ] PostgreSQL stores user/calculation relationship.
+- [ ] Frontend and backend use consistent business logic.
+- [ ] Important edge cases are handled.
+- [ ] Automated tests pass.
+
+## Deployment
+
+- [ ] Docker Compose builds successfully.
+- [ ] Application runs in containers.
+- [ ] Database persists through container restarts.
+- [ ] Cloudflare Tunnel is connected.
+- [ ] Public HTTPS URL works.
+- [ ] Production does not require public DB/app ports.
+- [ ] Application survives container restart.
+
+## Documentation
+
+- [ ] README is complete.
+- [ ] BUSINESS_LOGIC.md is complete.
+- [ ] Environment variables documented.
+- [ ] Deployment procedure documented.
+- [ ] AI usage documented.
+- [ ] Presentation deck prepared.
+
+---
+
+# 35. Recommended Execution Order for the Coding Agent
+
+Execute in this exact order unless a dependency forces a change:
+
+```text
+PHASE 1 — DISCOVERY
+1. Inspect PDF requirements.
+2. Inspect UI reference.
+3. Extract all input/output fields.
+4. Research ROI/Margin/Revenue definitions.
+5. Create BUSINESS_LOGIC.md.
+6. Write initial acceptance criteria.
+
+PHASE 2 — BACKEND FOUNDATION
+7. Configure PostgreSQL.
+8. Create users/calculations migrations.
+9. Create Eloquent models and relationships.
+10. Configure Sanctum/session authentication.
+11. Implement register/login/logout/me.
+12. Add validation.
+13. Add auth feature tests.
+
+PHASE 3 — CALCULATION ENGINE
+14. Implement CalculationService.
+15. Implement frontend calculation utility.
+16. Add unit tests for formulas and edge cases.
+17. Verify frontend/backend outputs.
+
+PHASE 4 — CALCULATOR UI
+18. Build dashboard.
+19. Build calculator inputs.
+20. Implement slider <-> number synchronization.
+21. Implement real-time result cards.
+22. Implement Save Calculation UX.
+
+PHASE 5 — HISTORY
+23. Implement POST /calculations.
+24. Implement GET /calculations.
+25. Enforce authenticated user ownership.
+26. Build history UI.
+27. Add cross-user isolation tests.
+
+PHASE 6 — QUALITY
+28. Add loading/error/empty states.
+29. Add responsive behavior.
+30. Run full test suite.
+31. Perform manual browser QA.
+
+PHASE 7 — DEPLOYMENT
+32. Build Docker images.
+33. Configure nginx + PHP-FPM.
+34. Configure PostgreSQL volume.
+35. Configure Cloudflare Tunnel.
+36. Deploy with Docker Compose.
+37. Run migrations.
+38. Verify production HTTPS.
+39. Run production smoke tests.
+
+PHASE 8 — DELIVERY
+40. Finish README.
+41. Finish BUSINESS_LOGIC.md.
+42. Prepare presentation PDF.
+43. Verify repository cleanliness.
+44. Verify live URL.
+45. Perform final end-to-end demo rehearsal.
+```
+
+---
+
+# 36. Final Agent Output Expected
+
+At the end of the implementation, report:
+
+```text
+## Implementation Summary
+- Features completed
+- Known assumptions
+- Known limitations
+
+## Business Logic
+- Formula summary
+- Research references
+
+## Test Results
+- Test count
+- Pass/fail
+- Important security tests
+
+## Deployment
+- Public URL
+- Docker Compose status
+- Cloudflare Tunnel status
+
+## Files
+- README.md
+- BUSINESS_LOGIC.md
+- Presentation PDF
+
+## AI Assistance
+- Where AI was used
+- What was manually reviewed
+```
+
+Do not claim deployment success unless the public URL and end-to-end flows have actually been verified.
