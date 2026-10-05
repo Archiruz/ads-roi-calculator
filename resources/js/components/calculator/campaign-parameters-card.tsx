@@ -4,10 +4,16 @@ import type { CalculatorInputs } from '@/types';
 
 interface CampaignParametersCardProps {
     inputs: CalculatorInputs;
-    onChange: <K extends keyof CalculatorInputs>(key: K, value: CalculatorInputs[K]) => void;
+    onChange: <K extends keyof CalculatorInputs>(
+        key: K,
+        value: CalculatorInputs[K],
+    ) => void;
 }
 
-export function CampaignParametersCard({ inputs, onChange }: CampaignParametersCardProps) {
+export function CampaignParametersCard({
+    inputs,
+    onChange,
+}: CampaignParametersCardProps) {
     return (
         <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
             <div className="mb-6 flex items-start gap-3">
@@ -19,7 +25,8 @@ export function CampaignParametersCard({ inputs, onChange }: CampaignParametersC
                         Parameter Kampanye
                     </h2>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        Sesuaikan parameter kampanye Anda untuk melihat hasil prediksi
+                        Sesuaikan parameter kampanye Anda untuk melihat hasil
+                        prediksi
                     </p>
                 </div>
             </div>

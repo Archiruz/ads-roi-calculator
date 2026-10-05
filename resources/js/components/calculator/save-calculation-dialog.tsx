@@ -13,7 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import type { CalculatorInputs, ComputedResults, CalculationRecord } from '@/types';
+import type {
+    CalculatorInputs,
+    ComputedResults,
+    CalculationRecord,
+} from '@/types';
 
 interface SaveCalculationDialogProps {
     inputs: CalculatorInputs;
@@ -21,14 +25,20 @@ interface SaveCalculationDialogProps {
     onSaved?: (saved: CalculationRecord) => void;
 }
 
-export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculationDialogProps) {
+export function SaveCalculationDialog({
+    inputs,
+    results,
+    onSaved,
+}: SaveCalculationDialogProps) {
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState('');
     const [notes, setNotes] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
     const handleOpen = () => {
-        setTitle(`Kampanye ${new Date().toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })}`);
+        setTitle(
+            `Kampanye ${new Date().toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })}`,
+        );
         setNotes('');
         setOpen(true);
     };
@@ -38,13 +48,17 @@ export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculat
         setIsSaving(true);
 
         try {
-            const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content;
+            const csrfToken = (
+                document.querySelector(
+                    'meta[name="csrf-token"]',
+                ) as HTMLMetaElement
+            )?.content;
 
             const res = await fetch('/api/calculations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                     ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {}),
                 },
                 body: JSON.stringify({
@@ -73,7 +87,8 @@ export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculat
 
             setOpen(false);
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : 'Terjadi kesalahan sistem';
+            const message =
+                err instanceof Error ? err.message : 'Terjadi kesalahan sistem';
             toast.error('Gagal menyimpan', { description: message });
         } finally {
             setIsSaving(false);
@@ -97,7 +112,8 @@ export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculat
                     <DialogHeader>
                         <DialogTitle>Simpan Hasil Perhitungan</DialogTitle>
                         <DialogDescription>
-                            Simpan proyeksi kampanye ini ke riwayat akun Anda untuk dibandingkan di kemudian hari.
+                            Simpan proyeksi kampanye ini ke riwayat akun Anda
+                            untuk dibandingkan di kemudian hari.
                         </DialogDescription>
                     </DialogHeader>
 
@@ -114,7 +130,9 @@ export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculat
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="save_notes">Catatan Tambahan (Opsional)</Label>
+                            <Label htmlFor="save_notes">
+                                Catatan Tambahan (Opsional)
+                            </Label>
                             <textarea
                                 id="save_notes"
                                 value={notes}
@@ -126,8 +144,22 @@ export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculat
                         </div>
 
                         <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-3 text-xs text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400">
-                            <div>Estimasi ROI: <strong className="text-blue-600 dark:text-blue-400">{results.roi_percentage}%</strong></div>
-                            <div>Keuntungan: <strong>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(results.profit)}</strong></div>
+                            <div>
+                                Estimasi ROI:{' '}
+                                <strong className="text-blue-600 dark:text-blue-400">
+                                    {results.roi_percentage}%
+                                </strong>
+                            </div>
+                            <div>
+                                Keuntungan:{' '}
+                                <strong>
+                                    {new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        maximumFractionDigits: 0,
+                                    }).format(results.profit)}
+                                </strong>
+                            </div>
                         </div>
                     </div>
 
@@ -140,8 +172,14 @@ export function SaveCalculationDialog({ inputs, results, onSaved }: SaveCalculat
                         >
                             Batal
                         </Button>
-                        <Button type="submit" disabled={isSaving} className="gap-2 bg-blue-600 hover:bg-blue-700">
-                            {isSaving && <Loader2 className="size-4 animate-spin" />}
+                        <Button
+                            type="submit"
+                            disabled={isSaving}
+                            className="gap-2 bg-blue-600 hover:bg-blue-700"
+                        >
+                            {isSaving && (
+                                <Loader2 className="size-4 animate-spin" />
+                            )}
                             Simpan ke Riwayat
                         </Button>
                     </DialogFooter>

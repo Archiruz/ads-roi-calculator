@@ -9,7 +9,12 @@ import { CalculationHistoryTable } from '@/components/calculator/calculation-his
 import { computeCalculatorResults } from '@/lib/calculation';
 import { dashboard } from '@/routes';
 import { Sparkles, History as HistoryIcon } from 'lucide-react';
-import type { DashboardInvitation, CalculatorInputs, ComputedResults, CalculationRecord } from '@/types';
+import type {
+    DashboardInvitation,
+    CalculatorInputs,
+    ComputedResults,
+    CalculationRecord,
+} from '@/types';
 
 type Props = {
     pendingInvitations?: DashboardInvitation[];
@@ -34,7 +39,8 @@ export default function Dashboard({
 
     // Single source of truth for numeric inputs to ensure 100% real-time synchronization
     const [inputs, setInputs] = useState<CalculatorInputs>(defaultInputs);
-    const [historyList, setHistoryList] = useState<CalculationRecord[]>(recentCalculations);
+    const [historyList, setHistoryList] =
+        useState<CalculationRecord[]>(recentCalculations);
 
     // Deterministic instant client-side calculation
     const computedResults = useMemo(() => {
@@ -88,8 +94,10 @@ export default function Dashboard({
                     </h1>
 
                     <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-600 sm:text-base dark:text-neutral-400">
-                        Buat keputusan berdasarkan data dengan kalkulator prediksi canggih kami.
-                        Prediksi pendapatan, optimalkan pengeluaran iklan, dan maksimalkan profitabilitas produk digital Anda.
+                        Buat keputusan berdasarkan data dengan kalkulator
+                        prediksi canggih kami. Prediksi pendapatan, optimalkan
+                        pengeluaran iklan, dan maksimalkan profitabilitas produk
+                        digital Anda.
                     </p>
 
                     <div className="mt-6 flex items-center justify-center gap-3">

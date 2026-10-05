@@ -21,7 +21,8 @@ export function CalculationHistoryTable({
     onDelete,
     onLoadIntoCalculator,
 }: CalculationHistoryTableProps) {
-    const [selectedRecord, setSelectedRecord] = useState<CalculationRecord | null>(null);
+    const [selectedRecord, setSelectedRecord] =
+        useState<CalculationRecord | null>(null);
 
     if (!calculations || calculations.length === 0) {
         return (
@@ -31,7 +32,8 @@ export function CalculationHistoryTable({
                     Belum Ada Riwayat Perhitungan
                 </h4>
                 <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                    Jalankan perhitungan dengan parameter kampanye Anda dan klik "Simpan Perhitungan".
+                    Jalankan perhitungan dengan parameter kampanye Anda dan klik
+                    "Simpan Perhitungan".
                 </p>
             </div>
         );
@@ -41,7 +43,7 @@ export function CalculationHistoryTable({
         <>
             <div className="overflow-x-auto rounded-2xl border border-neutral-200/80 bg-white shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
                 <table className="w-full text-left text-sm">
-                    <thead className="border-b border-neutral-100 bg-neutral-50/70 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:border-neutral-800 dark:bg-neutral-800/40 dark:text-neutral-400">
+                    <thead className="border-b border-neutral-100 bg-neutral-50/70 text-xs font-semibold tracking-wider text-neutral-500 uppercase dark:border-neutral-800 dark:bg-neutral-800/40 dark:text-neutral-400">
                         <tr>
                             <th className="px-5 py-3.5">Kampanye</th>
                             <th className="px-5 py-3.5">Budget Iklan</th>
@@ -63,10 +65,13 @@ export function CalculationHistoryTable({
                                 >
                                     <td className="px-5 py-4">
                                         <div className="font-semibold text-neutral-900 dark:text-neutral-100">
-                                            {calc.title || `Perhitungan #${calc.id}`}
+                                            {calc.title ||
+                                                `Perhitungan #${calc.id}`}
                                         </div>
                                         <div className="text-xs text-neutral-400">
-                                            {new Date(calc.created_at).toLocaleDateString('id-ID', {
+                                            {new Date(
+                                                calc.created_at,
+                                            ).toLocaleDateString('id-ID', {
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric',
@@ -98,7 +103,9 @@ export function CalculationHistoryTable({
                                                     : 'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300'
                                             }`}
                                         >
-                                            {formatPercentage(calc.roi_percentage)}
+                                            {formatPercentage(
+                                                calc.roi_percentage,
+                                            )}
                                         </span>
                                     </td>
                                     <td className="px-5 py-4 text-right">
@@ -107,7 +114,11 @@ export function CalculationHistoryTable({
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => onLoadIntoCalculator(calc)}
+                                                    onClick={() =>
+                                                        onLoadIntoCalculator(
+                                                            calc,
+                                                        )
+                                                    }
                                                     title="Terapkan ke Kalkulator"
                                                     className="size-8 p-0 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40"
                                                 >
@@ -117,7 +128,9 @@ export function CalculationHistoryTable({
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={() => setSelectedRecord(calc)}
+                                                onClick={() =>
+                                                    setSelectedRecord(calc)
+                                                }
                                                 title="Lihat Rincian"
                                                 className="size-8 p-0 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
                                             >
@@ -127,7 +140,9 @@ export function CalculationHistoryTable({
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => onDelete(calc.id)}
+                                                    onClick={() =>
+                                                        onDelete(calc.id)
+                                                    }
                                                     title="Hapus"
                                                     className="size-8 p-0 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40"
                                                 >
@@ -144,57 +159,91 @@ export function CalculationHistoryTable({
             </div>
 
             {/* Detail Inspection Modal */}
-            <Dialog open={!!selectedRecord} onOpenChange={(open) => !open && setSelectedRecord(null)}>
+            <Dialog
+                open={!!selectedRecord}
+                onOpenChange={(open) => !open && setSelectedRecord(null)}
+            >
                 <DialogContent className="sm:max-w-lg">
                     {selectedRecord && (
                         <>
                             <DialogHeader>
-                                <DialogTitle>{selectedRecord.title || 'Detail Perhitungan'}</DialogTitle>
+                                <DialogTitle>
+                                    {selectedRecord.title ||
+                                        'Detail Perhitungan'}
+                                </DialogTitle>
                             </DialogHeader>
 
                             <div className="grid grid-cols-2 gap-3 py-3 text-sm">
                                 <div className="rounded-xl border border-neutral-100 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
-                                    <div className="text-xs text-neutral-500">Harga Produk</div>
+                                    <div className="text-xs text-neutral-500">
+                                        Harga Produk
+                                    </div>
                                     <div className="mt-1 font-bold text-neutral-900 dark:text-neutral-100">
-                                        {formatRupiah(selectedRecord.product_price)}
+                                        {formatRupiah(
+                                            selectedRecord.product_price,
+                                        )}
                                     </div>
                                 </div>
                                 <div className="rounded-xl border border-neutral-100 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
-                                    <div className="text-xs text-neutral-500">Budget Iklan</div>
+                                    <div className="text-xs text-neutral-500">
+                                        Budget Iklan
+                                    </div>
                                     <div className="mt-1 font-bold text-neutral-900 dark:text-neutral-100">
-                                        {formatRupiah(selectedRecord.monthly_ad_spend)}
+                                        {formatRupiah(
+                                            selectedRecord.monthly_ad_spend,
+                                        )}
                                     </div>
                                 </div>
                                 <div className="rounded-xl border border-neutral-100 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
-                                    <div className="text-xs text-neutral-500">Cost per Result (CPR)</div>
+                                    <div className="text-xs text-neutral-500">
+                                        Cost per Result (CPR)
+                                    </div>
                                     <div className="mt-1 font-bold text-neutral-900 dark:text-neutral-100">
                                         {formatRupiah(selectedRecord.cpr)}
                                     </div>
                                 </div>
                                 <div className="rounded-xl border border-neutral-100 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
-                                    <div className="text-xs text-neutral-500">Nilai Pesanan Rata-rata</div>
+                                    <div className="text-xs text-neutral-500">
+                                        Nilai Pesanan Rata-rata
+                                    </div>
                                     <div className="mt-1 font-bold text-neutral-900 dark:text-neutral-100">
-                                        {formatRupiah(selectedRecord.average_order_value)}
+                                        {formatRupiah(
+                                            selectedRecord.average_order_value,
+                                        )}
                                     </div>
                                 </div>
                                 <div className="rounded-xl border border-neutral-100 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
-                                    <div className="text-xs text-neutral-500">Estimasi Jumlah Results</div>
+                                    <div className="text-xs text-neutral-500">
+                                        Estimasi Jumlah Results
+                                    </div>
                                     <div className="mt-1 font-bold text-neutral-900 dark:text-neutral-100">
-                                        {Math.floor(Number(selectedRecord.results_count))}
+                                        {Math.floor(
+                                            Number(
+                                                selectedRecord.results_count,
+                                            ),
+                                        )}
                                     </div>
                                 </div>
                                 <div className="rounded-xl border border-neutral-100 bg-neutral-50/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
-                                    <div className="text-xs text-neutral-500">Target CPR (30%)</div>
+                                    <div className="text-xs text-neutral-500">
+                                        Target CPR (30%)
+                                    </div>
                                     <div className="mt-1 font-bold text-neutral-900 dark:text-neutral-100">
-                                        {formatRupiah(selectedRecord.cpr_target)}
+                                        {formatRupiah(
+                                            selectedRecord.cpr_target,
+                                        )}
                                     </div>
                                 </div>
                             </div>
 
                             {selectedRecord.notes && (
                                 <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-3 text-xs text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300">
-                                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Catatan:</div>
-                                    <p className="whitespace-pre-wrap">{selectedRecord.notes}</p>
+                                    <div className="mb-1 font-semibold text-neutral-900 dark:text-neutral-100">
+                                        Catatan:
+                                    </div>
+                                    <p className="whitespace-pre-wrap">
+                                        {selectedRecord.notes}
+                                    </p>
                                 </div>
                             )}
                         </>

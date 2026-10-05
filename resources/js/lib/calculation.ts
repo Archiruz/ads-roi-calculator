@@ -3,7 +3,9 @@ import type { CalculatorInputs, ComputedResults } from '@/types';
 /**
  * Format number into standard Indonesian Rupiah format: Rp 1.500.000 or -Rp 1.436.170
  */
-export function formatRupiah(value: number | string | null | undefined): string {
+export function formatRupiah(
+    value: number | string | null | undefined,
+): string {
     const num = typeof value === 'string' ? parseFloat(value) : (value ?? 0);
     if (isNaN(num)) return 'Rp 0';
 
@@ -17,7 +19,9 @@ export function formatRupiah(value: number | string | null | undefined): string 
 /**
  * Format percentage with explicit sign and single decimal: +400.0% or -95.7%
  */
-export function formatPercentage(value: number | string | null | undefined): string {
+export function formatPercentage(
+    value: number | string | null | undefined,
+): string {
     const num = typeof value === 'string' ? parseFloat(value) : (value ?? 0);
     if (isNaN(num)) return '0.0%';
 
@@ -30,11 +34,17 @@ export function formatPercentage(value: number | string | null | undefined): str
  */
 export function formatBudgetWord(spend: number): string {
     if (spend >= 1_000_000) {
-        const juta = (spend / 1_000_000).toFixed(1).replace('.0', '').replace('.', ',');
+        const juta = (spend / 1_000_000)
+            .toFixed(1)
+            .replace('.0', '')
+            .replace('.', ',');
         return `Rp ${juta} juta`;
     }
     if (spend >= 1_000) {
-        const ribu = (spend / 1_000).toFixed(1).replace('.0', '').replace('.', ',');
+        const ribu = (spend / 1_000)
+            .toFixed(1)
+            .replace('.0', '')
+            .replace('.', ',');
         return `Rp ${ribu} ribu`;
     }
     return formatRupiah(spend);
@@ -43,7 +53,9 @@ export function formatBudgetWord(spend: number): string {
 /**
  * Pure deterministic calculation function with 100% parity with backend CalculationService
  */
-export function computeCalculatorResults(inputs: CalculatorInputs): ComputedResults {
+export function computeCalculatorResults(
+    inputs: CalculatorInputs,
+): ComputedResults {
     const productPrice = Math.max(0, Number(inputs.product_price) || 0);
     const monthlyAdSpend = Math.max(0, Number(inputs.monthly_ad_spend) || 0);
     const cpr = Number(inputs.cpr) || 0;
@@ -67,12 +79,16 @@ export function computeCalculatorResults(inputs: CalculatorInputs): ComputedResu
         resultsCount = monthlyAdSpend / cpr;
         revenue = Math.round(resultsCount * aov);
         profit = revenue - monthlyAdSpend;
-        roiPercentage = monthlyAdSpend > 0 ? Number(((profit / monthlyAdSpend) * 100).toFixed(2)) : 0;
+        roiPercentage =
+            monthlyAdSpend > 0
+                ? Number(((profit / monthlyAdSpend) * 100).toFixed(2))
+                : 0;
         marginPerResult = Math.round(aov - cpr);
     }
 
     const displayResultsCount = Math.floor(resultsCount);
-    const roiStatus = roiPercentage >= 0 ? 'Kampanye Menguntungkan' : 'Perlu Optimasi';
+    const roiStatus =
+        roiPercentage >= 0 ? 'Kampanye Menguntungkan' : 'Perlu Optimasi';
 
     // Dynamic strategic insights matching mockups
     const insights: string[] = [];
@@ -81,14 +97,20 @@ export function computeCalculatorResults(inputs: CalculatorInputs): ComputedResu
     if (roiPercentage >= 0) {
         insights.push('ROI sangat baik! Kampanye Anda sangat menguntungkan.');
     } else {
-        insights.push('Kampanye perlu optimasi. Fokus pada pengurangan CPR atau peningkatan nilai pesanan.');
+        insights.push(
+            'Kampanye perlu optimasi. Fokus pada pengurangan CPR atau peningkatan nilai pesanan.',
+        );
     }
 
     // 2. CPR Benchmark Health
     if (cpr <= cprTarget && cpr > 0) {
-        insights.push('CPR Anda berada dalam kisaran sehat (30% dari harga produk).');
+        insights.push(
+            'CPR Anda berada dalam kisaran sehat (30% dari harga produk).',
+        );
     } else {
-        insights.push('Pertimbangkan untuk menurunkan CPR Anda untuk meningkatkan profitabilitas. Target CPR sebaiknya sekitar 30% dari harga produk.');
+        insights.push(
+            'Pertimbangkan untuk menurunkan CPR Anda untuk meningkatkan profitabilitas. Target CPR sebaiknya sekitar 30% dari harga produk.',
+        );
     }
 
     // 3. Projected Budget Scale Narrative
@@ -96,7 +118,9 @@ export function computeCalculatorResults(inputs: CalculatorInputs): ComputedResu
     const resultsLabel = Math.round(resultsCount);
     const marginFormatted = formatRupiah(marginPerResult);
 
-    insights.push(`Dengan budget ${budgetLabel}, Anda dapat menghasilkan sekitar ${resultsLabel} results. Setiap result menghasilkan margin ${marginFormatted}.`);
+    insights.push(
+        `Dengan budget ${budgetLabel}, Anda dapat menghasilkan sekitar ${resultsLabel} results. Setiap result menghasilkan margin ${marginFormatted}.`,
+    );
 
     return {
         product_price: productPrice,

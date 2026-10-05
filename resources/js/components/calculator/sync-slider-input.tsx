@@ -39,7 +39,10 @@ export function SyncSliderInput({
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-                <label htmlFor={id} className="font-semibold text-neutral-800 dark:text-neutral-200">
+                <label
+                    htmlFor={id}
+                    className="font-semibold text-neutral-800 dark:text-neutral-200"
+                >
                     {label}
                 </label>
                 {showCurrencyBadge && (
@@ -74,12 +77,14 @@ export function SyncSliderInput({
                     value={value === 0 ? '' : value}
                     placeholder="0"
                     onChange={handleNumberChange}
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm font-medium text-neutral-900 shadow-xs transition-colors placeholder:text-neutral-400 focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm font-medium text-neutral-900 shadow-xs transition-colors placeholder:text-neutral-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
                 />
             </div>
 
             {helperText && (
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">{helperText}</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {helperText}
+                </p>
             )}
         </div>
     );

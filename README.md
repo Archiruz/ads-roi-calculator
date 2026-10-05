@@ -55,6 +55,7 @@ PostgreSQL Database Container (:5432, Isolated Internal Network)
 The complete mathematical derivation, research benchmarks, and edge cases are documented in [**`BUSINESS_LOGIC.md`**](./BUSINESS_LOGIC.md).
 
 ### Summary of Core Formulas:
+
 1. **Jumlah Results (Conversions)**:
    $$\text{results} = \frac{\text{monthly\_ad\_spend}}{\text{cpr}}$$
 2. **Pendapatan (Revenue)**:
@@ -73,6 +74,7 @@ The complete mathematical derivation, research benchmarks, and edge cases are do
 ## 5. Local Development Setup
 
 ### Prerequisites
+
 - PHP 8.4+
 - Composer 2+
 - Node.js 20+ & npm
@@ -80,36 +82,40 @@ The complete mathematical derivation, research benchmarks, and edge cases are do
 ### Installation Steps
 
 1. Clone the repository and copy the environment file:
-   ```bash
-   git clone <repo-url>
-   cd ads-roi-calculator
-   cp .env.example .env
-   ```
+
+    ```bash
+    git clone <repo-url>
+    cd ads-roi-calculator
+    cp .env.example .env
+    ```
 
 2. Install PHP and Node dependencies:
-   ```bash
-   composer install
-   npm install
-   ```
+
+    ```bash
+    composer install
+    npm install
+    ```
 
 3. Generate application key:
-   ```bash
-   php artisan key:generate
-   ```
+
+    ```bash
+    php artisan key:generate
+    ```
 
 4. Run database migrations:
-   ```bash
-   php artisan migrate
-   ```
+
+    ```bash
+    php artisan migrate
+    ```
 
 5. Build frontend assets and start servers:
-   ```bash
-   # In terminal 1 (Laravel backend)
-   php artisan serve
+    ```bash
+    # In terminal 1 (Laravel backend)
+    php artisan serve
 
-   # In terminal 2 (Vite dev server)
-   npm run dev
-   ```
+    # In terminal 2 (Vite dev server)
+    npm run dev
+    ```
 
 ---
 
@@ -118,39 +124,42 @@ The complete mathematical derivation, research benchmarks, and edge cases are do
 ### Production Deployment via Docker Compose
 
 1. Prepare your production `.env` with a secure `APP_KEY`, PostgreSQL credentials, and Cloudflare Tunnel token:
-   ```env
-   APP_ENV=production
-   APP_DEBUG=false
-   APP_URL=https://roi.yourdomain.com
-   APP_KEY=base64:...
 
-   DB_CONNECTION=pgsql
-   DB_HOST=db
-   DB_PORT=5432
-   DB_DATABASE=ads_roi
-   DB_USERNAME=postgres
-   DB_PASSWORD=your_secure_password
+    ```env
+    APP_ENV=production
+    APP_DEBUG=false
+    APP_URL=https://roi.yourdomain.com
+    APP_KEY=base64:...
 
-   SESSION_DRIVER=database
-   SESSION_SECURE_COOKIE=true
+    DB_CONNECTION=pgsql
+    DB_HOST=db
+    DB_PORT=5432
+    DB_DATABASE=ads_roi
+    DB_USERNAME=postgres
+    DB_PASSWORD=your_secure_password
 
-   CLOUDFLARE_TUNNEL_TOKEN=ey...
-   ```
+    SESSION_DRIVER=database
+    SESSION_SECURE_COOKIE=true
+
+    CLOUDFLARE_TUNNEL_TOKEN=ey...
+    ```
 
 2. Build and start containers:
-   ```bash
-   docker compose -f docker-compose.prod.yml up -d --build
-   ```
+
+    ```bash
+    docker compose -f docker-compose.prod.yml up -d --build
+    ```
 
 3. Run migrations inside the container:
-   ```bash
-   docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
-   ```
+
+    ```bash
+    docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
+    ```
 
 4. Optimize caches:
-   ```bash
-   docker compose -f docker-compose.prod.yml exec app php artisan optimize
-   ```
+    ```bash
+    docker compose -f docker-compose.prod.yml exec app php artisan optimize
+    ```
 
 ---
 
@@ -181,6 +190,7 @@ An 8-slide presentation deck covering the problem scope, architecture, business 
 📄 [**`presentation.pdf`**](./presentation.pdf)
 
 To regenerate the presentation at any time:
+
 ```bash
 npx tsx generate-presentation.ts
 ```
@@ -190,5 +200,6 @@ npx tsx generate-presentation.ts
 ## 9. AI Copilot Assistance Disclosure
 
 In accordance with the test guidelines:
+
 - **AI Tooling**: Antigravity AI agent assisted in reverse-engineering the UI reference mockups, structuring the architectural plan, drafting boilerplate controllers/tests, and formatting styling.
 - **Human Verification**: All mathematical formulas were independently evaluated against digital marketing benchmarks, test edge cases (division by zero, negative spend), multi-tenant data boundaries, and database migrations were reviewed and verified with automated test suites.

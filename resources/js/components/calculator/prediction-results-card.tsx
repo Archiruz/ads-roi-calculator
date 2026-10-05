@@ -1,4 +1,10 @@
-import { BarChart3, TrendingUp, DollarSign, Target, Calculator } from 'lucide-react';
+import {
+    BarChart3,
+    TrendingUp,
+    DollarSign,
+    Target,
+    Calculator,
+} from 'lucide-react';
 import { formatPercentage, formatRupiah } from '@/lib/calculation';
 import type { ComputedResults } from '@/types';
 
@@ -107,13 +113,17 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
             {/* Bottom Unit Economics Row */}
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-neutral-200/70 bg-white px-5 py-3.5 text-sm dark:border-neutral-800 dark:bg-neutral-900">
                 <div>
-                    <div className="text-xs text-neutral-500 dark:text-neutral-400">Pendapatan per Result</div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Pendapatan per Result
+                    </div>
                     <div className="mt-0.5 text-base font-bold text-neutral-900 dark:text-neutral-100">
                         {formatRupiah(results.revenue_per_result)}
                     </div>
                 </div>
                 <div className="text-right">
-                    <div className="text-xs text-neutral-500 dark:text-neutral-400">Margin per Result</div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Margin per Result
+                    </div>
                     <div
                         className={`mt-0.5 text-base font-bold ${
                             results.margin_per_result >= 0

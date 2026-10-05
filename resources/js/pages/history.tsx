@@ -27,7 +27,11 @@ interface HistoryPageProps {
 
 export default function HistoryPage({ calculations }: HistoryPageProps) {
     const handleDelete = (id: number) => {
-        if (!confirm('Apakah Anda yakin ingin menghapus riwayat perhitungan ini?')) {
+        if (
+            !confirm(
+                'Apakah Anda yakin ingin menghapus riwayat perhitungan ini?',
+            )
+        ) {
             return;
         }
 
@@ -60,7 +64,8 @@ export default function HistoryPage({ calculations }: HistoryPageProps) {
                             </h1>
                         </div>
                         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                            Daftar semua proyeksi dan perhitungan ROI yang telah Anda simpan. Data bersifat privat untuk akun Anda.
+                            Daftar semua proyeksi dan perhitungan ROI yang telah
+                            Anda simpan. Data bersifat privat untuk akun Anda.
                         </p>
                     </div>
 
@@ -86,11 +91,17 @@ export default function HistoryPage({ calculations }: HistoryPageProps) {
                             {calculations.links.map((link, idx) => (
                                 <Button
                                     key={idx}
-                                    variant={link.active ? 'default' : 'outline'}
+                                    variant={
+                                        link.active ? 'default' : 'outline'
+                                    }
                                     size="sm"
                                     disabled={!link.url}
-                                    onClick={() => link.url && router.visit(link.url)}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
+                                    onClick={() =>
+                                        link.url && router.visit(link.url)
+                                    }
+                                    dangerouslySetInnerHTML={{
+                                        __html: link.label,
+                                    }}
                                 />
                             ))}
                         </div>

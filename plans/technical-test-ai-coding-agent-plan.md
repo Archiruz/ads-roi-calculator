@@ -36,19 +36,20 @@ Key requirements from the PDF:
 - Saving a calculation must associate it with the currently authenticated user.
 - History must only show the authenticated user's calculations.
 - Required API endpoints include:
-  - `POST /auth/register`
-  - `POST /auth/login`
-  - `POST /calculations`
-  - `GET /calculations`
+    - `POST /auth/register`
+    - `POST /auth/login`
+    - `POST /calculations`
+    - `GET /calculations`
 - Relational databases such as MySQL/PostgreSQL are preferred.
 - AI assistance is explicitly allowed as a copilot when the reasoning behind its use can be explained.
 - The ROI/Margin formulas are intentionally omitted from the test; independently research and document the selected business logic.
 - Final deliverables are:
-  - Source repository
-  - Live deployed application
-  - Presentation deck in PDF
+    - Source repository
+    - Live deployed application
+    - Presentation deck in PDF
 
 UI reference:
+
 - `https://drive.google.com/drive/folders/1XHjTCCcRlLD1aHhHzSlwdsMF2E0qJhnl?usp=sharing`
 
 Do not silently invent missing UI fields or formulas. Inspect the UI reference and document assumptions before implementing the calculator.
@@ -384,10 +385,10 @@ Example register request:
 
 ```json
 {
-  "name": "Example User",
-  "email": "user@example.com",
-  "password": "password123",
-  "password_confirmation": "password123"
+    "name": "Example User",
+    "email": "user@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
 }
 ```
 
@@ -403,8 +404,8 @@ Login:
 
 ```json
 {
-  "email": "user@example.com",
-  "password": "password123"
+    "email": "user@example.com",
+    "password": "password123"
 }
 ```
 
@@ -491,7 +492,7 @@ If a malicious client sends:
 
 ```json
 {
-  "user_id": 999
+    "user_id": 999
 }
 ```
 
@@ -724,7 +725,7 @@ resources/js/lib/calculation.ts
 Example:
 
 ```ts
-export function calculateResults(input: CalculatorInput): CalculatorResult
+export function calculateResults(input: CalculatorInput): CalculatorResult;
 ```
 
 This function must:
@@ -953,15 +954,15 @@ Suggested network:
 
 ```yaml
 networks:
-  app:
-    driver: bridge
+    app:
+        driver: bridge
 ```
 
 Suggested volume:
 
 ```yaml
 volumes:
-  postgres_data:
+    postgres_data:
 ```
 
 ---
@@ -993,9 +994,9 @@ Recommended production approach:
 - Create the tunnel in Cloudflare.
 - Create the public hostname in Cloudflare.
 - Point the hostname to the Docker service:
-  - `http://web:80`
+    - `http://web:80`
 - Store the tunnel token in an environment variable:
-  - `CLOUDFLARE_TUNNEL_TOKEN`
+    - `CLOUDFLARE_TUNNEL_TOKEN`
 - Start with:
 
 ```bash
@@ -1264,60 +1265,60 @@ Create a PDF presentation with approximately 7–9 slides.
 Recommended structure:
 
 1. **Title**
-   - Pressure Technical Test
-   - ROI Advertising Calculator
-   - Developer name
+    - Pressure Technical Test
+    - ROI Advertising Calculator
+    - Developer name
 
 2. **Problem & Requirements**
-   - Authentication
-   - Real-time calculator
-   - Private history
+    - Authentication
+    - Real-time calculator
+    - Private history
 
 3. **Tech Stack**
-   - React
-   - Laravel
-   - PostgreSQL
-   - Docker
-   - Cloudflare Tunnel
+    - React
+    - Laravel
+    - PostgreSQL
+    - Docker
+    - Cloudflare Tunnel
 
 4. **System Architecture**
-   - Browser
-   - Cloudflare
-   - Tunnel
-   - nginx
-   - Laravel
-   - PostgreSQL
+    - Browser
+    - Cloudflare
+    - Tunnel
+    - nginx
+    - Laravel
+    - PostgreSQL
 
 5. **Authentication & Security**
-   - Session auth
-   - Password hashing
-   - Protected routes
-   - User-scoped data
+    - Session auth
+    - Password hashing
+    - Protected routes
+    - User-scoped data
 
 6. **Business Logic**
-   - Inputs
-   - Formula definitions
-   - ROI
-   - Margin
-   - Revenue
-   - Edge cases
+    - Inputs
+    - Formula definitions
+    - ROI
+    - Margin
+    - Revenue
+    - Edge cases
 
 7. **User Flow**
-   - Register
-   - Login
-   - Calculate
-   - Save
-   - History
-   - Logout
+    - Register
+    - Login
+    - Calculate
+    - Save
+    - History
+    - Logout
 
 8. **Testing**
-   - Authentication tests
-   - Data isolation test
-   - Calculator tests
+    - Authentication tests
+    - Data isolation test
+    - Calculator tests
 
 9. **Live Demo / Repository**
-   - Live URL
-   - Repository URL
+    - Live URL
+    - Repository URL
 
 The presentation should explain reasoning, not just show screenshots.
 
