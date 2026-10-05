@@ -7,12 +7,7 @@ class CalculationService
     /**
      * Compute ROI campaign parameters, results, margins, and strategic insights.
      *
-     * @param  array{
-     *     product_price: float|int|numeric-string,
-     *     monthly_ad_spend: float|int|numeric-string,
-     *     cpr: float|int|numeric-string,
-     *     average_order_value: float|int|numeric-string
-     * }  $inputs
+     * @param  array<string, mixed>  $inputs  Missing keys default to 0.
      * @return array{
      *     product_price: float,
      *     monthly_ad_spend: float,

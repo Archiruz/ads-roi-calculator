@@ -51,7 +51,7 @@ class Calculation extends Model
     }
 
     /**
-     * @return BelongsTo<User, Calculation>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
