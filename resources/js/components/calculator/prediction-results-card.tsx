@@ -35,8 +35,8 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
             <div
                 className={`relative mb-6 overflow-hidden rounded-2xl p-6 text-white shadow-xs transition-all duration-300 ${
                     isProfitable
-                        ? 'bg-purple-700 dark:bg-purple-900 border border-purple-600/40'
-                        : 'bg-neutral-800 dark:bg-neutral-900 border border-neutral-700'
+                        ? 'border border-purple-600/40 bg-purple-700 dark:bg-purple-900'
+                        : 'border border-neutral-700 bg-neutral-800 dark:bg-neutral-900'
                 }`}
             >
                 <div className="flex items-start justify-between">

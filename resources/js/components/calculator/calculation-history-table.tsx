@@ -120,7 +120,7 @@ export function CalculationHistoryTable({
                                                         )
                                                     }
                                                     title="Terapkan ke Kalkulator"
-                                                    className="size-8 p-0 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/40 dark:text-purple-400"
+                                                    className="size-8 p-0 text-purple-600 hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-950/40"
                                                 >
                                                     <RotateCcw className="size-4" />
                                                 </Button>
