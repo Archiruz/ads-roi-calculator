@@ -47,6 +47,22 @@ test('users can authenticate using the login screen', function () {
     $response->assertRedirect(route('dashboard'));
 });
 
+test('authentication behind reverse proxy redirects to https dashboard', function () {
+    $user = User::factory()->create();
+
+    $response = $this->withHeaders([
+        'X-Forwarded-Proto' => 'https',
+        'X-Forwarded-Host' => 'calculator.archiruz.dev',
+    ])->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $targetUrl = $response->headers->get('Location');
+    expect($targetUrl)->toStartWith('https://');
+});
+
 test('users with two factor enabled are redirected to two factor challenge', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two-factor authentication is not enabled.');

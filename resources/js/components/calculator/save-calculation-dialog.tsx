@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { router } from '@inertiajs/react';
 import { BookmarkPlus, Loader2 } from 'lucide-react';
 import {
     Dialog,
@@ -84,6 +85,8 @@ export function SaveCalculationDialog({
             if (onSaved && data.data) {
                 onSaved(data.data);
             }
+
+            router.reload({ only: ['recentCalculations'] });
 
             setOpen(false);
         } catch (err: unknown) {

@@ -14,6 +14,19 @@ test('guests are redirected to the login page', function () {
     $response->assertRedirect(route('login'));
 });
 
+test('guests visiting root dashboard and history routes are redirected to login', function () {
+    $this->get('/dashboard')->assertRedirect(route('login'));
+    $this->get('/history')->assertRedirect(route('login'));
+});
+
+test('authenticated users visiting root dashboard and history routes are redirected to team routes', function () {
+    $user = User::factory()->create();
+    $team = $user->currentTeam;
+
+    $this->actingAs($user)->get('/dashboard')->assertRedirect(route('dashboard', ['current_team' => $team->slug]));
+    $this->actingAs($user)->get('/history')->assertRedirect(route('calculations.history', ['current_team' => $team->slug]));
+});
+
 test('authenticated users can visit the dashboard', function () {
     $user = User::factory()->create();
     $team = $user->currentTeam;
