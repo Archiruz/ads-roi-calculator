@@ -43,13 +43,8 @@ export function AppSidebar() {
     const footerNavItems: NavItem[] = [
         {
             title: 'Repository',
-            href: 'https://github.com/laravel/react-starter-kit',
+            href: 'https://github.com/Archiruz/ads-roi-calculator',
             icon: FolderGit2,
-        },
-        {
-            title: 'Documentation',
-            href: 'https://laravel.com/docs/starter-kits#react',
-            icon: BookOpen,
         },
     ];
 

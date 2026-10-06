@@ -8,7 +8,7 @@ import { SaveCalculationDialog } from '@/components/calculator/save-calculation-
 import { CalculationHistoryTable } from '@/components/calculator/calculation-history-table';
 import { computeCalculatorResults } from '@/lib/calculation';
 import { dashboard } from '@/routes';
-import { TrendingUp, History as HistoryIcon } from 'lucide-react';
+import { History as HistoryIcon } from 'lucide-react';
 import type {
     DashboardInvitation,
     CalculatorInputs,
@@ -80,33 +80,25 @@ export default function Dashboard({
                 onOpenChange={setShowInvitations}
             />
 
-            <div className="flex h-full flex-1 flex-col gap-8 p-4 sm:p-6 lg:p-8">
-                {/* Hero Header matching design mockups */}
-                <div className="mx-auto max-w-4xl text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50/90 px-3.5 py-1 text-xs font-semibold text-purple-700 shadow-2xs dark:border-purple-900/60 dark:bg-purple-950/40 dark:text-purple-300">
-                        <TrendingUp className="size-3.5" />
-                        <span>Prediksi Kesuksesan Produk Digital Anda</span>
+            <div className="flex h-full flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
+                {/* Top Action Header */}
+                <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl dark:text-neutral-100">
+                            Kalkulator ROI Kampanye
+                        </h1>
+                        <p className="text-xs text-neutral-500 sm:text-sm dark:text-neutral-400">
+                            Sesuaikan parameter iklan untuk memprediksi
+                            konversi, omzet, dan profitabilitas secara
+                            real-time.
+                        </p>
                     </div>
 
-                    <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl lg:text-5xl dark:text-neutral-50">
-                        Hitung ROI Kampanye <br className="hidden sm:inline" />
-                        Iklan Anda Secara Real-Time
-                    </h1>
-
-                    <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-600 sm:text-base dark:text-neutral-400">
-                        Buat keputusan berdasarkan data dengan kalkulator
-                        prediksi canggih kami. Prediksi pendapatan, optimalkan
-                        pengeluaran iklan, dan maksimalkan profitabilitas produk
-                        digital Anda.
-                    </p>
-
-                    <div className="mt-6 flex items-center justify-center gap-3">
-                        <SaveCalculationDialog
-                            inputs={inputs}
-                            results={computedResults}
-                            onSaved={handleSavedCalculation}
-                        />
-                    </div>
+                    <SaveCalculationDialog
+                        inputs={inputs}
+                        results={computedResults}
+                        onSaved={handleSavedCalculation}
+                    />
                 </div>
 
                 {/* 2-Column Calculator Core Grid */}

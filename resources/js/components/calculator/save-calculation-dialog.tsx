@@ -103,7 +103,7 @@ export function SaveCalculationDialog({
             <DialogTrigger asChild>
                 <Button
                     onClick={handleOpen}
-                    className="gap-2 rounded-xl bg-purple-600 px-5 font-semibold text-white shadow-xs hover:bg-purple-700"
+                    className="gap-2 rounded-xl bg-purple-600 px-5 font-semibold text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:bg-purple-700 hover:shadow-md active:translate-y-0"
                 >
                     <BookmarkPlus className="size-4" />
                     Simpan Perhitungan

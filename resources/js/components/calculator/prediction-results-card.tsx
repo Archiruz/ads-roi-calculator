@@ -33,7 +33,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
 
             {/* Hero ROI Banner Card */}
             <div
-                className={`relative mb-6 overflow-hidden rounded-2xl p-6 text-white shadow-xs transition-all duration-300 ${
+                className={`relative mb-6 overflow-hidden rounded-2xl p-6 text-white shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${
                     isProfitable
                         ? 'border border-purple-600/40 bg-purple-700 dark:bg-purple-900'
                         : 'border border-neutral-700 bg-neutral-800 dark:bg-neutral-900'
@@ -51,7 +51,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                             {results.roi_status}
                         </div>
                     </div>
-                    <div className="rounded-full bg-white/15 p-2.5 backdrop-blur-xs">
+                    <div className="rounded-full bg-white/15 p-2.5 backdrop-blur-xs transition-transform duration-300 hover:scale-110">
                         <TrendingUp className="size-6 text-white" />
                     </div>
                 </div>
@@ -60,7 +60,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
             {/* 4 Primary Metric Cards Grid */}
             <div className="mb-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
                 {/* 1. Pendapatan */}
-                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300/80 hover:shadow-2xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-purple-800/60">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
                         <DollarSign className="size-3.5 text-purple-600 dark:text-purple-400" />
                         <span>Pendapatan</span>
@@ -71,7 +71,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                 </div>
 
                 {/* 2. Keuntungan */}
-                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300/80 hover:shadow-2xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-purple-800/60">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
                         <TrendingUp className="size-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Keuntungan</span>
@@ -88,7 +88,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                 </div>
 
                 {/* 3. Jumlah Results */}
-                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300/80 hover:shadow-2xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-purple-800/60">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
                         <Target className="size-3.5 text-purple-600 dark:text-purple-400" />
                         <span>Jumlah Results</span>
@@ -99,7 +99,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                 </div>
 
                 {/* 4. CPR Target */}
-                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300/80 hover:shadow-2xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-purple-800/60">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
                         <Calculator className="size-3.5 text-purple-600 dark:text-purple-400" />
                         <span>CPR Target</span>

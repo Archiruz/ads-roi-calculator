@@ -24,7 +24,7 @@ export function KeyInsightsCard({ insights }: KeyInsightsCardProps) {
                 {insights.map((insight, idx) => (
                     <div
                         key={idx}
-                        className="flex items-start gap-3 rounded-xl border border-neutral-100 bg-neutral-50/80 p-3.5 text-xs text-neutral-700 sm:text-sm dark:border-neutral-800/60 dark:bg-neutral-800/40 dark:text-neutral-300"
+                        className="flex items-start gap-3 rounded-xl border border-neutral-100 bg-neutral-50/80 p-3.5 text-xs text-neutral-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-200/80 sm:text-sm dark:border-neutral-800/60 dark:bg-neutral-800/40 dark:text-neutral-300 dark:hover:border-purple-800/50"
                     >
                         <div className="mt-1 size-2 shrink-0 rounded-full bg-purple-600 dark:bg-purple-400" />
                         <span className="leading-relaxed">{insight}</span>
