@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { formatRupiah, formatPercentage } from '@/lib/calculation';
 import { Button } from '@/components/ui/button';
-import { Trash2, Eye, Calendar, Sparkles } from 'lucide-react';
+import { Trash2, Eye, Calendar, RotateCcw } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -99,7 +99,7 @@ export function CalculationHistoryTable({
                                         <span
                                             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${
                                                 isPositive
-                                                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
+                                                    ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300'
                                                     : 'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300'
                                             }`}
                                         >
@@ -120,9 +120,9 @@ export function CalculationHistoryTable({
                                                         )
                                                     }
                                                     title="Terapkan ke Kalkulator"
-                                                    className="size-8 p-0 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+                                                    className="size-8 p-0 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/40 dark:text-purple-400"
                                                 >
-                                                    <Sparkles className="size-4" />
+                                                    <RotateCcw className="size-4" />
                                                 </Button>
                                             )}
                                             <Button

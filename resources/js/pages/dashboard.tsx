@@ -8,7 +8,7 @@ import { SaveCalculationDialog } from '@/components/calculator/save-calculation-
 import { CalculationHistoryTable } from '@/components/calculator/calculation-history-table';
 import { computeCalculatorResults } from '@/lib/calculation';
 import { dashboard } from '@/routes';
-import { Sparkles, History as HistoryIcon } from 'lucide-react';
+import { TrendingUp, History as HistoryIcon } from 'lucide-react';
 import type {
     DashboardInvitation,
     CalculatorInputs,
@@ -83,8 +83,8 @@ export default function Dashboard({
             <div className="flex h-full flex-1 flex-col gap-8 p-4 sm:p-6 lg:p-8">
                 {/* Hero Header matching design mockups */}
                 <div className="mx-auto max-w-4xl text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/80 px-3.5 py-1 text-xs font-semibold text-blue-700 shadow-2xs dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300">
-                        <Sparkles className="size-3.5" />
+                    <div className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50/90 px-3.5 py-1 text-xs font-semibold text-purple-700 shadow-2xs dark:border-purple-900/60 dark:bg-purple-950/40 dark:text-purple-300">
+                        <TrendingUp className="size-3.5" />
                         <span>Prediksi Kesuksesan Produk Digital Anda</span>
                     </div>
 

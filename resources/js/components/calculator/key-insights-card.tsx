@@ -26,7 +26,7 @@ export function KeyInsightsCard({ insights }: KeyInsightsCardProps) {
                         key={idx}
                         className="flex items-start gap-3 rounded-xl border border-neutral-100 bg-neutral-50/80 p-3.5 text-xs text-neutral-700 sm:text-sm dark:border-neutral-800/60 dark:bg-neutral-800/40 dark:text-neutral-300"
                     >
-                        <div className="mt-1 size-2 shrink-0 rounded-full bg-blue-600 dark:bg-blue-400" />
+                        <div className="mt-1 size-2 shrink-0 rounded-full bg-purple-600 dark:bg-purple-400" />
                         <span className="leading-relaxed">{insight}</span>
                     </div>
                 ))}

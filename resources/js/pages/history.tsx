@@ -58,7 +58,7 @@ export default function HistoryPage({ calculations }: HistoryPageProps) {
                 <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2">
-                            <HistoryIcon className="size-6 text-blue-600 dark:text-blue-400" />
+                            <HistoryIcon className="size-6 text-purple-600 dark:text-purple-400" />
                             <h1 className="text-2xl font-extrabold text-neutral-900 sm:text-3xl dark:text-neutral-50">
                                 Riwayat Perhitungan Kampanye
                             </h1>

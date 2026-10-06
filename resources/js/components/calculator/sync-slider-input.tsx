@@ -46,7 +46,7 @@ export function SyncSliderInput({
                     {label}
                 </label>
                 {showCurrencyBadge && (
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">
+                    <span className="font-semibold text-purple-600 dark:text-purple-400">
                         {formatRupiah(value)}
                     </span>
                 )}
@@ -62,7 +62,7 @@ export function SyncSliderInput({
                         step={step}
                         value={Math.min(max, Math.max(min, value))}
                         onChange={handleSliderChange}
-                        className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-neutral-200 accent-blue-600 dark:bg-neutral-800 dark:accent-blue-500"
+                        className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-neutral-200 accent-purple-600 dark:bg-neutral-800 dark:accent-purple-500"
                     />
                 </div>
             )}
@@ -77,7 +77,7 @@ export function SyncSliderInput({
                     value={value === 0 ? '' : value}
                     placeholder="0"
                     onChange={handleNumberChange}
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm font-medium text-neutral-900 shadow-xs transition-colors placeholder:text-neutral-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm font-medium text-neutral-900 shadow-xs transition-colors placeholder:text-neutral-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
                 />
             </div>
 

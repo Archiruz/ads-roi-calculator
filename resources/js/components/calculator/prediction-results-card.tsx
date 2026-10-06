@@ -18,7 +18,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
     return (
         <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900/60">
             <div className="mb-6 flex items-start gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100/70 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-purple-100/80 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
                     <BarChart3 className="size-5" />
                 </div>
                 <div>
@@ -33,10 +33,10 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
 
             {/* Hero ROI Banner Card */}
             <div
-                className={`relative mb-6 overflow-hidden rounded-2xl p-6 text-white shadow-sm transition-all duration-300 ${
+                className={`relative mb-6 overflow-hidden rounded-2xl p-6 text-white shadow-xs transition-all duration-300 ${
                     isProfitable
-                        ? 'bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500'
-                        : 'bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-500'
+                        ? 'bg-purple-700 dark:bg-purple-900 border border-purple-600/40'
+                        : 'bg-neutral-800 dark:bg-neutral-900 border border-neutral-700'
                 }`}
             >
                 <div className="flex items-start justify-between">
@@ -62,7 +62,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                 {/* 1. Pendapatan */}
                 <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                        <DollarSign className="size-3.5 text-blue-600 dark:text-blue-400" />
+                        <DollarSign className="size-3.5 text-purple-600 dark:text-purple-400" />
                         <span>Pendapatan</span>
                     </div>
                     <div className="mt-2 text-xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -90,7 +90,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                 {/* 3. Jumlah Results */}
                 <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                        <Target className="size-3.5 text-blue-600 dark:text-blue-400" />
+                        <Target className="size-3.5 text-purple-600 dark:text-purple-400" />
                         <span>Jumlah Results</span>
                     </div>
                     <div className="mt-2 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -101,7 +101,7 @@ export function PredictionResultsCard({ results }: PredictionResultsCardProps) {
                 {/* 4. CPR Target */}
                 <div className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
                     <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                        <Calculator className="size-3.5 text-blue-600 dark:text-blue-400" />
+                        <Calculator className="size-3.5 text-purple-600 dark:text-purple-400" />
                         <span>CPR Target</span>
                     </div>
                     <div className="mt-2 text-xl font-bold text-neutral-900 dark:text-neutral-100">

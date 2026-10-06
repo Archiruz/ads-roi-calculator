@@ -17,7 +17,7 @@ export function CampaignParametersCard({
     return (
         <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
             <div className="mb-6 flex items-start gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
                     <Target className="size-5" />
                 </div>
                 <div>

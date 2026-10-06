@@ -103,7 +103,7 @@ export function SaveCalculationDialog({
             <DialogTrigger asChild>
                 <Button
                     onClick={handleOpen}
-                    className="gap-2 rounded-xl bg-blue-600 px-5 font-semibold text-white shadow-sm hover:bg-blue-700"
+                    className="gap-2 rounded-xl bg-purple-600 px-5 font-semibold text-white shadow-xs hover:bg-purple-700"
                 >
                     <BookmarkPlus className="size-4" />
                     Simpan Perhitungan
@@ -142,14 +142,14 @@ export function SaveCalculationDialog({
                                 onChange={(e) => setNotes(e.target.value)}
                                 placeholder="Target audiens, copy test A/B, atau asumsi konversi..."
                                 rows={3}
-                                className="w-full rounded-md border border-neutral-200 bg-white p-3 text-sm text-neutral-900 shadow-xs focus:border-blue-500 focus:outline-hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+                                className="w-full rounded-md border border-neutral-200 bg-white p-3 text-sm text-neutral-900 shadow-xs focus:border-purple-500 focus:outline-hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
                             />
                         </div>
 
                         <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-3 text-xs text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400">
                             <div>
                                 Estimasi ROI:{' '}
-                                <strong className="text-blue-600 dark:text-blue-400">
+                                <strong className="text-purple-600 dark:text-purple-400">
                                     {results.roi_percentage}%
                                 </strong>
                             </div>
@@ -178,7 +178,7 @@ export function SaveCalculationDialog({
                         <Button
                             type="submit"
                             disabled={isSaving}
-                            className="gap-2 bg-blue-600 hover:bg-blue-700"
+                            className="gap-2 bg-purple-600 hover:bg-purple-700"
                         >
                             {isSaving && (
                                 <Loader2 className="size-4 animate-spin" />
